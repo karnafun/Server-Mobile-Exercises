@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Add Marker On Click</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6k4P_BoZOg2zM4K05E54ilLLWwZo-9cU&v=3.exp&sensor=false"></script>
+    <script>
+
+        function initialize() {
+
+            var ruppinPos = new Object();
+            ruppinPos.lat  = 32.343193;
+            ruppinPos.long = 34.911908;
+
+            var myLatlng = new google.maps.LatLng(ruppinPos.lat, ruppinPos.long);
+            var mapOptions = {
+                zoom: 13,
+                center: myLatlng
+            }
+            var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+            image = "images/university.png";
+
+            var marker1 = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: 'Ruppin',
+                icon: image
+            });
+
+            // Add a click event listner to the map
+            google.maps.event.addListener(map, 'click', function (event) {
+                var lat = event.latLng.lat();
+                var lng = event.latLng.lng();
+                var clickLatlng = new google.maps.LatLng(lat, lng);
+
+                // Add a new marker to the map
+                var marker = new google.maps.Marker({
+                    position: clickLatlng,
+                    map: map,
+                    title: 'My Click'
+                });
+
+            });
+
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>

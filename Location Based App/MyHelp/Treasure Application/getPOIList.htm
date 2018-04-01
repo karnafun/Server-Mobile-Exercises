@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+	
+	<script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKZW8kDSPbc-2w0hopNeWcxUHZetgzA4w&v=3.exp&sensor=false"></script>
+      <script src="ajaxCalls.js"></script>
+    <title>show POI</title>
+
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+
+   
+      <script>
+          //-----------------------------------------------------------------------
+          //-----------------------------------------------------------------------
+          function initialize() {
+              // set the ruppin coordinates
+              var ruppinPos = new Object();
+              ruppinPos.lat = 32.343193;
+              ruppinPos.long = 34.911908;
+              var myLatlng = new google.maps.LatLng(ruppinPos.lat, ruppinPos.long);
+              var mapOptions = {
+                  zoom: 16,
+                  center: myLatlng
+              }
+              map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+              var marker1 = new google.maps.Marker({
+                  position: myLatlng,
+                  map: map,
+                  title: 'Ruppin'
+              });
+
+          }
+
+          google.maps.event.addDomListener(window, 'load', initialize);
+
+
+          //-----------------------------------------------------------------------
+          // get the point of interst (POI)  list
+          //-----------------------------------------------------------------------
+          function getPOI() {
+              groupName = document.getElementById("groupNameTB").value;
+              if (groupName == "") {
+                  alert("must enter a group name");
+                  return;
+              }
+              var request = {
+                  groupName: groupName
+              }
+              getPOIList(request, getPOIList_Success, getPOIList_Failure);
+          }
+
+          //-----------------------------------------------------------------------
+          // getPOIList Success
+          //-----------------------------------------------------------------------
+          function getPOIList_Success(data) {
+
+              poiList = $.parseJSON(data.d);
+              if (poiList.length == 0) {
+                  alert("there are no POI under this group name");
+                  return;
+              }
+
+              // set the center of the map on the first point
+              var myLatlng = new google.maps.LatLng(poiList[0].P.Lat, poiList[0].P.Lng);
+              map.setCenter(myLatlng);
+              // run on all the POIs and display them
+              for (i = 0; i < poiList.length; i++) {
+                  showPOI(poiList[i]);
+              }
+
+          }
+
+          //-----------------------------------------------------------------------
+          // getPOIList Failure
+          //-----------------------------------------------------------------------
+          function getPOIList_Failure(e) {
+              alert("failed in getPOIList :( " + e.responseText);
+          }
+
+
+          //--------------------------------------
+          // show the POI on the map
+          //--------------------------------------
+          function showPOI(poiPoint) {
+              var poiLatlng = new google.maps.LatLng(poiPoint.P.Lat, poiPoint.P.Lng);
+              image = "images/blue-dot.png";
+              var marker = new google.maps.Marker({
+                  position: poiLatlng,
+                  map: map,
+                  title: poiPoint.Name,
+                  icon: image
+              });
+          }
+
+      </script>
+  </head>
+  <body>
+    <div style = "height:50px; background-color:Green">
+    groupName : <input type = "text" id = "groupNameTB" /> &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type = "button" onclick = "getPOI()" value = "Show Points Of Interst" />
+    </div>
+    <div id="map-canvas"></div>
+  </body>
+</html>
+

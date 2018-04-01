@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Info windows</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6k4P_BoZOg2zM4K05E54ilLLWwZo-9cU&v=3.exp&sensor=false"></script>
+    <script>
+
+        // When the user clicks the marker, an info window opens.
+
+        var ruppinPos = new Object();
+        ruppinPos.lat = 32.343193;
+        ruppinPos.long = 34.911908;
+
+        function initialize() {
+            var ruppinLatlng = new google.maps.LatLng(ruppinPos.lat, ruppinPos.long);
+            var mapOptions = {
+                zoom: 14,
+                center: ruppinLatlng
+            };
+
+            var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+            // build an HTML code string
+            var contentString = '<div id="content">' +
+                                   '<h1>Ruppin Academic Center</h1>' +
+                                   '<div id="bodyContent">' +
+                                        '<p><b>Above And Beyond</b>' +
+                                        '<a href="http://www.ruppin.ac.il/english.aspx"> link to ruppin&rsquo;s site' +
+                                        '</p>' +
+                                        '<img src = "images/ruppin1.jpg"/>' +
+                                   '</div>' +
+                               '</div>';
+
+            // create a new InfoWindow Object
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+
+            // create a new marker
+            var marker = new google.maps.Marker({
+                position: ruppinLatlng,
+                map: map,
+                title: 'Ruppin Academic Center'
+            });
+
+            // Add an event listner to the marker click event
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.open(map, marker);
+            });
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>

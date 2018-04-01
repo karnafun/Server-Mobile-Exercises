@@ -1,0 +1,80 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+/// <summary>
+/// Summary description for Category
+/// </summary>
+public class Category
+{
+    DBServices db = new DBServices();
+    public Category()
+	{
+		//
+		// TODO: Add constructor logic here
+		//
+	}
+
+
+
+    private string name;
+
+    public string Name
+    {
+        get { return name; }
+        set { name = value; }
+    }
+
+    private int productAmount;
+
+    public int ProductAmount
+    {
+        get { return productAmount; }
+        set { productAmount = value; }
+    }
+
+    private int id;
+
+    public int Id
+    {
+        get { return id; }
+        set { id = value; }
+    }
+
+    public Category(int _id, string _name, int _productAmount)
+    {
+        Id = _id;
+        Name = _name;
+        ProductAmount = _productAmount;
+    }
+
+    public List<Category> getCategory()
+    {
+
+        //call the method getCategory from DBService
+        return db.getCategory();
+    }
+
+
+    public List<Product> getProductsByCat(int categoryId)
+    {
+        //call the method getProductsByCat from DBService
+
+        return db.getProductsByCat(categoryId);
+    }
+
+    public string getCategoryName(int id)
+    {
+        List<Category> list = getCategory();
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i].id==id)
+            {
+                return list[i].name;
+            }
+        }
+
+        return "Error ! \r\nCategory Not Found ! ";
+    }
+}

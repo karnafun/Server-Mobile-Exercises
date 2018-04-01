@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  	<title>Projects</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
+	<script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKZW8kDSPbc-2w0hopNeWcxUHZetgzA4w&v=3.exp&sensor=false"></script>
+	
+
+    <style type = "text/css">
+            IMG { width:100%; }
+            div, h1, h2, p { text-align:center; }
+            .project { width:100%}
+            .studentImage {width:80%}
+            html, body, #map-canvas {height: 100%;margin: 0px;padding: 0px}
+            #distLBL, #timerLBL{ font-size:1.5em; display:inline}
+            #groupNameTB{width:30px}
+            #navBTN {height:90%;}
+            #cont1 {height:40px; background-color:Teal; font-size:1.5em; color:White}
+            #cont2 {height:40px; background-color:White}
+    </style>
+
+
+    <script type="text/javascript" >
+
+        $(document).ready(function () {
+
+            initialize(); //  read all the projects
+        });
+
+        //------------------------------------------------------------------------------------
+        // Initialization
+        //------------------------------------------------------------------------------------
+        function initialize() {
+            timer = 0;
+            timeInterval = 5000; // in miliseconds
+            navFlag = "off";
+            minDistance = 5; // distance from the treasure in which it is found
+
+            var mapOptions = {
+                zoom: 17
+            }
+            mapObj = document.getElementById('map-canvas');
+            map = new google.maps.Map(mapObj, mapOptions); // create the map object
+            getMyPosition(); // get the position of the user
+        }
+
+
+        //-----------------------------------------------------------------------
+        // get the distance from a point to the server
+        //-----------------------------------------------------------------------
+        function getDistance(lat, lng, groupName) {
+            dataString = '{lat:' + lat + ',' + 'lng:' + lng + ',' + 'groupName:"' + groupName + '"}';
+            $.ajax({ // ajax call starts
+                url: 'TreasureAjax.asmx/getDistance',   // JQuery call to the server side method
+                data: dataString,    // the parameters sent to the server
+                type: 'POST',        // can be post or get
+                dataType: 'json',    // Choosing a JSON datatype
+                contentType: 'application/json; charset = utf-8', // of the data received
+                success: function (data) // Variable data contains the data we get from serverside
+                {
+                    var distance = $.parseJSON(data.d) * 1000; //X 1000 is because the value received is in KM
+                    distance = Math.floor(distance);           // round the distance
+                    // display it to the user
+                    document.getElementById("distLBL").innerHTML = distance + " meters";
+                    document.getElementById("timerLBL").innerHTML = timer + " sec";
+                    // check if target is reached
+                    if (distance < minDistance) {
+                        clearInterval(h);
+                        showVideo();
+                    }
+                }, // end of success
+                error: function (e) {
+                    alert("failed in getDistance :( " + e.responseText);
+                } // end of error
+            }) // end of ajax call
+        }
+
+        //-----------------------------------------------------------------------
+        // start the navigation
+        //-----------------------------------------------------------------------
+        function startNavigation() {
+            if (navFlag == "off") {
+                groupName = document.getElementById("groupNameTB").value;
+                if (groupName == "") {
+                    alert("must enter a group name");
+                    return;
+                }
+                navFlag = "on";
+                // clear the user display labels
+                document.getElementById("distLBL").innerHTML = "";
+                document.getElementById("timerLBL").innerHTML = "";
+                document.getElementById("navBTN").value = "stop navigation";
+
+                h = setInterval("getMyPosition()", timeInterval); // run the getPosition every timeInterval miliseconds
+            }
+            else {  // stop the navigation
+                stopNavigation()
+            }
+        }
+
+        //-----------------------------------------------------------------------
+        // stop the navigation
+        //-----------------------------------------------------------------------
+        function stopNavigation() {
+            if (h!= null) clearInterval(h); // will stop the running thread
+            navFlag = "off";
+            document.getElementById("navBTN").value = "start navigation";
+        }
+
+        //-----------------------------------------------------------------------
+        // get the user's position
+        //-----------------------------------------------------------------------
+        function getMyPosition() {
+            if (navFlag == "on") {
+                timer += timeInterval / 1000; // increment the timer
+            }
+            // Try HTML5 geolocation
+            if (navigator.geolocation) {
+                var options = {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 1000
+                };
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = new google.maps.LatLng(position.coords.latitude,
+                                       position.coords.longitude);
+                    image = "images/man_small.png";
+                    var marker1 = new google.maps.Marker({
+                        position: pos,
+                        map: map,
+                        title: 'You Are Here',
+                        icon:image
+                    });
+
+                    map.setCenter(pos); // center the map around the position of the user
+
+                    // calculate the distance of the user's from the target
+                    if (navFlag == "on") getDistance(position.coords.latitude, position.coords.longitude, groupName);
+
+                }, function () { // in case of failure of getCurrentPosition
+                    handleNoGeolocation(true);
+                }, options);
+            } else {
+                // Browser doesn't support Geolocation
+                handleNoGeolocation(false);
+            }
+        }
+
+        //----------------------------------------------------------------------------------
+        // function that is called in case there is no GeoLocation
+        //----------------------------------------------------------------------------------
+        function handleNoGeolocation(errorFlag) {
+            alert("failed to locate your device");
+            stopNavigation();
+            if (errorFlag) {
+                var content = 'Error: The Geolocation service failed.';
+            } else {
+                var content = 'Error: Your browser doesn\'t support geolocation.';
+            }
+            alert(content);
+        }
+
+        //----------------------------------------------------------------------------------
+        // Show a video
+        //----------------------------------------------------------------------------------
+        function showVideo() {
+            videoUrl = "http://www.youtube.com/embed/mHndiWsfc2U?rel=0";
+            imageUrl = "http://en.smalltownromanceblog.com/wp-content/uploads/2010/02/davidbroza_wideweb__470x3020.jpg";
+            htmlStr = "<a  href = '" + videoUrl + "'>";
+            htmlStr += "<p> press and listen </p>";
+            htmlStr += "<img src = '" + imageUrl + "'/>";
+            htmlStr += "</a>";
+            document.getElementById("map-canvas").innerHTML = htmlStr;
+        }
+
+    </script>
+</head>
+<body>
+    <div id="cont1">
+        Group:
+        <input type="text" id="groupNameTB" />&nbsp;&nbsp;&nbsp;
+        <input type="button" id="navBTN" value="start navigation" onclick="startNavigation()" />
+    </div>
+    <div id="cont2">
+        <h2 id="distLBL">
+        </h2>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <h2 id="timerLBL">
+        </h2>
+    </div>
+    <div id="map-canvas">
+    </div>
+   
+
+</body>
+</html>
+

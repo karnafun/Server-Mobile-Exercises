@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="Scripts/bootstrap.js"></script>
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link href="Scripts/FrontPageStylesheet.css" rel="stylesheet" />
+
+    <title> My Weed Shop </title>
+</head>
+<body>
+
+    <div class="modal fade img-modal" id="img-modal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" id="img-modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                </div>
+                <div id="img-modal-body" class="modal-body">
+
+                </div>
+                <div id="img-modal-footer" class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- NavBar -->
+    <div class="container pad">
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <img style="width:50px; height:50px;" src="Content/Images/logo.png"/>
+                    <a class="navbar-brand" href="#">GanjaShop</a>
+                </div>
+                <div class="collapse navbar-collapse"  id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="Index.html"><span class="glyphicon glyphicon-shopping-cart"></span> Shop</a></li>
+                        <li><a href="NewItem.aspx"><span class="glyphicon glyphicon-plus"></span> New Item</a></li>
+                        <li><a href="ContactPage.html"><span class="glyphicon glyphicon-envelope"></span> Contact Us</a></li>
+                    </ul>
+                    <!--<ul class="nav navbar-nav navbar-right">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    </ul>-->
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Center shit -->
+    <div id="center" class="container">
+        <div class="jumbotron">
+            <div class="row display-flex">
+
+                <div class="col-lg-3 col-md-6 col-xs-12 botPad">
+                    <div id="prod01" class="thumbnail">
+                        <img onclick="createModal('prod01')" src="Content/Images/Blue-Dream.png" />
+                        <div class="caption">
+                            <h2>Blue Dream </h2>
+                            
+                            <p> <span class="visible-xs glyphicon glyphicon-asterisk" ></span>  <span class="hidden-xs"> Hybrid</span>
+                            Sold for 96 shekels per gram. hybrid</p>
+                            <p class="hidden"> Blue Dream, a sativa-dominant hybrid originating in California, has achieved legendary status among West Coast strains. Crossing a Blueberry indica with the sativa Haze, Blue Dream balances full-body relaxation with gentle cerebral invigoration. Novice and veteran consumers alike enjoy the level effects of Blue Dream, which ease you gently into a calm euphoria. Some Blue Dream phenotypes express a more indica-like look and feel, but the sativa-leaning variety remains most prevalent. </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-xs-12 botPad">
+                    <div id="prod02" class="thumbnail">
+                        <img onclick="createModal('prod02')" src="Content/Images/Purple-Haze.png" />
+                        <div class="caption">
+                            <h2>Purple Haze</h2>
+                            <p><span class="visible-xs glyphicon glyphicon-plus"></span>  <span class="hidden-xs"> Sativa</span>
+                            Sold for 80 shekels per gram</p>
+                            <p class="hidden">Popularized by Jimi Hendrix’s 1967 classic, Purple Haze delivers a dreamy burst of euphoria that brings veteran consumers back to their psychedelic heyday. This nostalgic sativa staple remains cherished for its high-energy cerebral stimulation that awakens creativity and blissful contentment throughout the day. Purple Haze is believed to have descended from parent strains Purple Thai and Haze, who pass on a mix of sweet and earthy flavors underscored by notes of berry and sharp spice. Following her 8 to 9 week flowering time, Purple Haze buds typically acquire vibrant hues of lavender that further justify the naming of this strain.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-xs-12 botPad">
+                    <div id="prod03" class="thumbnail">
+                        <img onclick="createModal('prod03')" src="Content/Images/Og-Kush.png" />
+                        <div class="caption">
+                            <h2>Og Kush</h2>
+                            <p><span class="visible-xs glyphicon glyphicon-minus"></span>  <span class="hidden-xs"> Indica</span>
+                            Sold for 100 shekels per gram</p>
+                            <p class="hidden"> OG Kush makes up the genetic backbone of West Coast cannabis varieties, but in spite of its ubiquity, its genetic origins remain a mystery. Popular myth maintains that Chemdawg and Hindu Kush parented OG Kush, passing on the distinct “kush” bud structure we see in many strains today. However, we can’t be sure because OG Kush first came from bag seed in the early 90s. The earliest propagators (now known as Imperial Genetics) are said to have brought the seeds out of Florida to Colorado and southern California, where it now flourishes. There are many different phenotypes of OG Kush, some of which include Tahoe OG, SFV OG, and Alpha OG</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 col-xs-12 botPad">
+                    <div id="prod04" class="thumbnail">
+                        <img onclick="createModal('prod04')" src="Content/Images/Purple-Kush.png" />
+                        <div class="caption">
+                            <h2>Purple Kush</h2>
+                            <p><span class="visible-xs glyphicon glyphicon-minus"></span>  <span class="hidden-xs"> Indica</span>
+                            Sold for 93 shekels per gram</p>
+                            <p class="hidden">Purple Kush is a pure indica strain that emerged from the Oakland area of California as the result of a Hindu Kush and Purple Afghani cross. Its aroma is subtle and earthy with sweet overtones typical of Kush varieties. Blissful, long-lasting euphoria blankets the mind while physical relaxation rids the body of pain, sleeplessness, and stress. Purple Kush will grow wide rather than tall, and will be ready for harvest following an 8 week flowering time.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                    <div class="col-lg-3 col-md-6 col-xs-12 botPad">
+                        <div id="prod05" class="thumbnail">
+                            <img onclick="createModal('prod05')" src="Content/Images/Sour Diesel.jpg" />
+                            <div class="caption">
+                                <h2>Sour Diesel </h2>
+                                <p><span class="visible-xs glyphicon glyphicon-plus"></span>  <span class="hidden-xs"> Sativa</span> 
+                                Sold for 100 shekels per gram.</p>
+                                
+                                <p class="hidden">Thought to be an accidental cross when the DNL hermied, Sour Diesel (or East Coast Sour Diesel, as it's commonly called) is a special plant in the OG Kush/ChemDawg line of strains.  Its often "crushing" Sativa effect actually seems to hit most people as more of an Indica, increasing couchlock and being strong to the point of being overwhelming at times.  The plant itself is a fairly lanky one that tends to show lots of foxtailing when finished, practically stinking up the room with its pungent fuel-skunk-citrus bouquet.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-xs-12 botPad">
+                        <div id="prod06" class="thumbnail">
+                            <img onclick="createModal('prod06')" src="Content/Images/Afghan-Kush.jpg" />
+                            <div class="caption">
+                                <h2>Afghan Kush</h2>
+                                <p><span class="visible-xs glyphicon glyphicon-minus"></span>  <span class="hidden-xs"> Indica</span>
+                                Sold for 86 shekels per gram</p>
+                                <p class="hidden">From the land of hash-making varieties of cannabis, this Afghan Kush is one of the most resinous varieties on Earth, known for producing incredible "charas" and Afghani black hashish.  The plant shows a very strong traditional Indica structure, with large, wide, dark green leaves and thick, blunt-topped nugs. </p>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="col-lg-3 col-md-6 col-xs-12 botPad">
+                    <div id="prod07" class="thumbnail">
+                        <img onclick="createModal('prod07')" src="Content/Images/Maui Waui.png" />
+                        <div class="caption">
+                            <h2>Maui Waui</h2>
+                            <p><span class="visible-xs glyphicon glyphicon-plus"></span>  <span class="hidden-xs"> Sativa</span>
+                            Sold for 88 shekels per gram</p>
+                            <p class="hidden">the best Maui Wowie we've had the pleasure of trying, and it was certainly the most Sativa-looking. Very potent initially, it receded to an evenly energetic and clear-headed state but retained very strong eye effects throughout. It really shined when put under the camera lens, as it's a beautiful specimen.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-xs-12 botPad">
+                    <div id="prod08" class="thumbnail">
+                        <img onclick="createModal('prod08')" src="Content/Images/super-lemon-haze.png" />
+                        <div class="caption">
+                            <h2>Super Lemon Haze</h2>
+                            <p><span class="visible-xs glyphicon glyphicon-plus"></span>  <span class="hidden-xs"> Sativa</span>
+                            Sold for 88 shekels per gram</p>
+                            <p class="hidden">With its strong and sweet lemon qualities in both the smell and taste, this strain certainly lives up to its reputation and name when well-grown.  With the Indica lineage present in the Sativa-dominant hybrid, it results in a rather calm experience for a Haze-based strain — rather balanced between head and body effects overall.  The plant grows with short internodes and responds well to topping.  The standard shape for the untrained plant is a Christmas tree-style Sativa, with solid buds that have a high calyx-to-leaf ratio.</p>
+                        </div>
+                    </div>
+                </div>
+
+
+               
+            </div>
+            <div class="row display-flex">
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+   
+
+        <div class="container">
+    <div id="footer">
+            <p class="text-muted text-center"> <span class="glyphicon glyphicon-copyright-mark "> </span> Server-Side  <a href="https://github.com/karnafun/Benny/tree/master/WeedShop">Dor Danai</a> and <a href="#">Or Choban</a>.</p>
+        </div>
+    </div>
+
+    <script src="Scripts/ModalScript.js"></script>
+</body>
+</html>

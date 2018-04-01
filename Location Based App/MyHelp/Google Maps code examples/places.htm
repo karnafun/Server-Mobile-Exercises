@@ -1,0 +1,219 @@
+﻿
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Google Maps JavaScript API v3 Example: Place Search</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6k4P_BoZOg2zM4K05E54ilLLWwZo-9cU&v=3.exp&sensor=true&libraries=places"></script>
+
+    <style>
+      #map {
+        height: 600px;
+        width: 900px;
+        border: 1px solid #333;
+        margin-top: 0.6em;
+      }
+      
+      html, body
+          {
+              height: 100%;
+              margin: 0;
+              padding: 0;
+          }
+      
+    </style>
+
+    <script>
+        var map;
+        var infowindow;
+
+        function initialize() {
+            
+            centerPoint = new google.maps.LatLng(32.342818956309, 34.91279108017602); //ruppin
+            map = new google.maps.Map(document.getElementById('map'), {
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                center: centerPoint,
+                zoom: 12
+            });
+        }
+
+        function show() {
+
+            searchRadius = document.getElementById("searchRangeControl").value;
+            searchType = document.getElementById("typeTB").value;
+            var request = {
+                location: centerPoint,
+                radius: searchRadius,
+                types: [searchType]
+            };
+            
+
+            var service = new google.maps.places.PlacesService(map);
+            service.nearbySearch(request, placesCallBack);
+            showCircle();
+        
+        }
+
+        //----------------------------------------------------------
+        // The places callback function
+        //----------------------------------------------------------
+        function placesCallBack(results, status) {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                    createMarker(results[i]);
+                }
+            }
+            else {
+                alert("Error " + status);
+            }
+        }
+
+        //----------------------------------------------------------
+        // create a marker with the name of the place
+        //----------------------------------------------------------
+        function createMarker(place) {
+            var placeLoc = place.geometry.location;
+            var marker = new google.maps.Marker({
+                map: map,
+                position: place.geometry.location
+            });
+            if (searchType == "hospital")
+                marker.setIcon("images/hospital.png");
+
+            if (searchType == "school")
+                marker.setIcon("images/school.png");
+
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow = new google.maps.InfoWindow();
+                infowindow.setContent(place.name);
+                infowindow.open(map, this);
+            });
+        }
+
+        function showCircle() {
+            searchRadiusFloat = parseFloat(searchRadius); // note that you must parse it as number and not pass a string
+            var circleOptions = {
+                strokeColor: "#FF0000",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#0000FF",
+                fillOpacity: 0.35,
+                map: map,
+                center: centerPoint,
+                radius: searchRadiusFloat
+            };
+            cityCircle = new google.maps.Circle(circleOptions);
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+
+      <div id="text">
+
+          <input type="text" id="typeTB" list="typeList" /> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          0 <input type="range" id="searchRangeControl" min="0" max="10000" /> 10000 meters
+          <input type="button" onclick="show()" value="show" />
+      </div>
+
+      <div id="map">
+      </div>
+
+<datalist id = "typeList" >
+      <option> accounting  </option>
+      <option> airport  </option>
+      <option> amusement_park  </option>
+      <option> aquarium  </option>
+      <option> atm  </option>
+      <option> bakery  </option>
+      <option> bank  </option>
+      <option> bar  </option>
+      <option> beauty_salon  </option>
+      <option> bicycle_store  </option>
+      <option> bowling_alley  </option>
+      <option> bus_station  </option>
+      <option> cafe  </option>
+      <option> campground  </option>
+      <option> car_dealer  </option>
+      <option> car_rental  </option>
+      <option> car_repair  </option>
+      <option> car_wash  </option>
+      <option> casino  </option>
+      <option> cemetery  </option>
+      <option> church  </option>
+      <option> city_hall  </option>
+      <option> clothing_store  </option>
+      <option> convenience_store  </option>
+      <option> courthouse  </option>
+      <option> dentist  </option>
+      <option> department_store  </option>
+      <option> doctor  </option>
+      <option> electrician  </option>
+      <option> electronics_store  </option>
+      <option> embassy  </option>
+      <option> establishment  </option>                      
+      <option> finance  </option>
+      <option> fire_station  </option>
+      <option> florist  </option>
+      <option> funeral_home  </option>       
+      <option> furniture_store  </option>
+      <option> general_contractor  </option>
+      <option> grocery_or_supermarket  </option>
+      <option> gym  </option>
+      <option> hair_care  </option>
+      <option> hardware_store  </option>
+      <option> health  </option>
+      <option> hindu_temple  </option>                      
+      <option> home_goods_store  </option>
+      <option> hospital  </option>
+      <option> insurance_agency  </option>
+      <option> jewelry_store  </option>       
+      <option> laundry  </option>
+      <option> lawyer  </option>
+      <option> library  </option>       
+      <option> liquor_store  </option>
+      <option> local_government_office  </option>
+      <option> locksmith  </option>       
+      <option> lodging  </option>
+      <option> meal_delivery  </option>       
+      <option> meal_takeaway  </option>
+      <option> mosque  </option>
+      <option> movie_rental  </option>       
+      <option> movie_theater  </option>
+      <option> moving_company  </option>
+      <option> museum  </option>       
+      <option> night_club  </option>      
+      <option> painter  </option> 
+      <option> park  </option>       
+      <option> parking  </option>      
+      <option> pet_store  </option> 
+      <option> pharmacy  </option>       
+      <option> physiotherapist  </option>      
+      <option> place_of_worship  </option> 
+      <option> plumber  </option>       
+      <option> police  </option>      
+      <option> real_estate_agency  </option> 
+      <option> restaurant  </option>       
+      <option> roofing_contractor  </option>      
+      <option> rv_park  </option> 
+      <option> school  </option>       
+      <option> shoe_store  </option>      
+      <option> shopping_mall  </option> 
+      <option> spa  </option>       
+      <option> stadium  </option>      
+      <option> storage  </option> 
+      <option> store  </option> 
+      <option> subway_station  </option>       
+      <option> synagogue  </option>      
+      <option> taxi_stand  </option> 
+      <option> train_station  </option> 
+      <option> travel_agency  </option>       
+      <option> university  </option>      
+      <option> veterinary_care  </option>         
+      <option> zoo  </option>         
+</datalist>
+
+  </body>
+</html>

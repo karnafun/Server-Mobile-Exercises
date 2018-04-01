@@ -1,0 +1,61 @@
+﻿* {
+    margin:0;
+    padding:0;
+}
+
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 90%;
+    }
+}
+.jumbotron {
+    background-color: #555555
+}
+.thumbnail {
+    height: 100%;
+    background-color: #222222;
+   
+
+}
+.thumbnail img {
+   padding:5%;
+  
+
+}
+
+.botPad {
+    padding-bottom: 15px;
+}
+
+.caption  *{
+    text-align: center;
+    color: white;
+ 
+}
+
+
+.row.display-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#img-modal-content {
+    background-color: #222222;
+    color:white;
+}
+
+#footer {
+    background-color: #222222;
+    color: white;
+    min-height: 50px;
+    max-height:150px;
+}
+
+.pad {
+    margin-top:10px;
+}
+
+.gly-span {
+    display:inline;
+}

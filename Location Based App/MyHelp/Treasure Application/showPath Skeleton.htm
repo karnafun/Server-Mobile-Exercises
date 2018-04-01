@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+	<!--<link rel="stylesheet" href="https://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />-->
+	<script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKZW8kDSPbc-2w0hopNeWcxUHZetgzA4w&v=3.exp&sensor=false"></script>
+<!--    <script src="https://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>-->
+    <title>Check Position</title>
+
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+
+   
+   <script>
+        function initialize() {
+            var ruppinPos = new Object();
+            ruppinPos.lat  = 32.343193;
+            ruppinPos.long = 34.911908;
+            var myLatlng = new google.maps.LatLng(ruppinPos.lat, ruppinPos.long);
+            var mapOptions = {
+                zoom: 17,
+                center: myLatlng,
+                mapTypeId: google.maps.MapTypeId.SATELLITE
+            }
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+            var marker1 = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: 'Ruppin'
+            });
+
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+        //-----------------------------------------------------------------------
+        // get the list of the path points
+        //-----------------------------------------------------------------------
+        function getPathList() {
+            var groupName = document.getElementById("groupNameTB").value;
+            if (groupName == "") {
+                alert("Please enter a group name");
+                return;
+            }
+            var dataString = '{groupName:"' + groupName + '"}';
+            $.ajax({ // ajax call starts
+                url: 'TreasureAjax.asmx/getPathList',   // JQuery loads serverside
+                data: dataString,    // name without the xml extension
+                type: 'POST',
+                dataType: 'json', // Choosing a JSON datatype
+                contentType: 'application/json; charset = utf-8',
+                success: function (data) // Variable data contains the data we get from serverside
+                {
+                    var pathList = $.parseJSON(data.d);
+                    drawPath(pathList);
+                }, // end of success
+                error: function (e) {
+                    alert("failed in getDistance :( " + e.responseText);
+                } // end of error
+            }) // end of ajax call
+        }
+
+
+        //--------------------------------------------------------------------------------
+        // draw the path from the path list
+        //--------------------------------------------------------------------------------
+        function drawPath(pathList) {
+
+            // draw the path
+
+            // show the target
+        
+        }
+
+        //-----------------------------------------------------------------------
+        // get the target point
+        //-----------------------------------------------------------------------
+        function getTarget() {
+            var groupName = document.getElementById("groupNameTB").value;
+            if (groupName == "") {
+                alert("Please enter a group name");
+                return;
+            }
+            var dataString = '{groupName:"' + groupName + '"}';
+            $.ajax({ // ajax call starts
+                url: 'TreasureAjax.asmx/getTarget',   // JQuery loads serverside.php
+                data: dataString,    // name without the xml extension
+                type: 'POST',
+                dataType: 'json', // Choosing a JSON datatype
+                contentType: 'application/json; charset = utf-8',
+                success: function (data) // Variable data contains the data we get from server side
+                {
+                    targetPoint = $.parseJSON(data.d);
+                    var targetLatlng = new google.maps.LatLng(targetPoint.Lat, targetPoint.Lng);
+                    image = "images/blue-dot.png";
+                    var marker = new google.maps.Marker({
+                        position: targetLatlng,
+                        map: map,
+                        title: 'Target ' + groupName + " 9/11 ",
+                        icon: image
+                    });
+
+                }, // end of success
+                error: function (e) {
+                    alert("failed in getTarget :( " + e.responseText);
+                } // end of error
+            }) // end of ajax call
+        }
+
+
+    </script>
+  </head>
+  <body>
+    <div style = "height:50px; background-color:Green">
+    groupName : <input type = "text" id = "groupNameTB" /> &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type = "button" onclick = "getPathList()" value = "Show Path List" />
+    </div>
+    <div id="map-canvas"></div>
+  </body>
+</html>

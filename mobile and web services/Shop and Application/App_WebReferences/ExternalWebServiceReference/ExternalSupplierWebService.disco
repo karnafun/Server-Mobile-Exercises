@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="https://proj.ruppin.ac.il/bgroup62/test2/tar5/ExternalSupplierWebService.asmx?wsdl" docRef="https://proj.ruppin.ac.il/bgroup62/test2/tar5/ExternalSupplierWebService.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="https://proj.ruppin.ac.il/bgroup62/test2/tar5/ExternalSupplierWebService.asmx" xmlns:q1="http://tempuri.org/" binding="q1:ExternalSupplierWebServiceSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="https://proj.ruppin.ac.il/bgroup62/test2/tar5/ExternalSupplierWebService.asmx" xmlns:q2="http://tempuri.org/" binding="q2:ExternalSupplierWebServiceSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>

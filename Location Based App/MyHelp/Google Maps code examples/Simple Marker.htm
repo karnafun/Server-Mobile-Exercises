@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Simple markers</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6k4P_BoZOg2zM4K05E54ilLLWwZo-9cU&v=3.exp&sensor=false"></script>
+    <script>
+        function initialize() {
+            // center the map in ruppin
+            var ruppinPos = new Object();
+            ruppinPos.lat  = 32.343193;
+            ruppinPos.long = 34.911908;
+
+            // Create a LatLng object
+            var myLatlng = new google.maps.LatLng(ruppinPos.lat, ruppinPos.long);
+
+            var mapOptions = {
+                zoom: 10,
+                center: myLatlng
+            }
+            // create a Map Object
+            var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+            image = "images/university.png";
+
+            var marker = new google.maps.Marker({
+                position: myLatlng,     
+                map: map,
+                title: 'Ruppin Rules',
+                icon: image  // define the icon you want to present
+            });
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>

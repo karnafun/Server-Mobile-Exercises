@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+	<script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKZW8kDSPbc-2w0hopNeWcxUHZetgzA4w&v=3.exp&sensor=false"></script>
+    <script src="ajaxCalls.js"></script>
+    <title>Set path points on the map</title>
+
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+
+   <script>
+        function initialize() {
+            var ruppinPos = new Object();
+            ruppinPos.lat  = 32.343193;
+            ruppinPos.long = 34.911908;
+            var myLatlng = new google.maps.LatLng(ruppinPos.lat, ruppinPos.long);
+            var mapOptions = {
+                zoom: 17,
+                center: myLatlng
+            }
+            var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+            // add a marker in Ruppin
+            var marker1 = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: 'Ruppin'
+            });
+
+            // wire the click event on the map
+            google.maps.event.addListener(map, 'click', function (event) {
+                // get the coordinates
+                var lat = event.latLng.lat();
+                var lng = event.latLng.lng();
+                var clickLatlng = new google.maps.LatLng(lat, lng);
+
+                // create a marker
+                var marker = new google.maps.Marker({
+                    position: clickLatlng,
+                    map: map,
+                    title: 'Path Point'
+                });
+
+                // write the point to the databsae
+                groupName = document.getElementById("groupNameTB").value;
+                var request = {
+                    lat: lat,
+                    lng: lng,
+                    groupName: groupName
+                }
+                // Ajax call to add the point to the server
+                setPathPoint(request, setPathPoint_Success, setPathPoint_Failure);
+            });
+
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+       //-----------------------------------------------------------------------
+       // callback when setPathPoint is successful
+       //-----------------------------------------------------------------------
+        function setPathPoint_Success(data) {
+            alert("point inserted");
+        }
+
+        //-----------------------------------------------------------------------
+        // callback when setPathPoint is successful
+        //-----------------------------------------------------------------------
+        function setPathPoint_Failure(e) {
+            alert("failed in setPathPoint :( " + e.responseText);
+        }
+       
+    </script>
+  </head>
+  <body>
+      <h1>Set Path Points</h1>
+      <div style = "height:50px;">
+         groupName : <input type = "text" id = "groupNameTB" />
+      </div>
+
+    <div id="map-canvas"></div>
+  </body>
+</html>

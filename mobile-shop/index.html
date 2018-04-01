@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>mywebsite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="AjaxCalls.js"></script>
+    <script src="Products.js"></script>
+    <link href="mainStyle.css" rel="stylesheet" />
+
+</head>
+<body onload="init()">
+    <div data-role="page" id="category-page">
+        <div data-role="header" data-theme="b">
+            <h1> Welcome </h1>
+        </div>
+        <div data-role="content">
+            <input type="search" name="search" id="search-basic" value="" placeholder="Search Category" />
+            <ul data-role="listview" data-input="#search-basic" data-filter="true" data-filter-reveal="true"
+                data-inset="true" id="cat-list">
+                <!-- Example -->
+                <!--<li><a href="#">Drafts <span class="ui-li-count">4</span></a></li>-->
+
+            </ul>
+        </div>
+
+        <div data-role="footer" data-position="fixed">
+            <img src="images/logo.png" class="footer-logo" />
+        </div>
+    </div>
+
+
+
+    <div data-role="page" id="product-page">
+        <div data-role="header" data-theme="b">
+            <a data-rel="back" data-icon="back">back</a>
+            <h1> Products List </h1>
+        </div>
+        <div data-role="content">
+            <input type="search" name="search" id="search-basic2" value="" placeholder="Enter a product.." />
+            <ul data-role="listview" data-input="#search-basic2" data-filter="true"
+                data-inset="true" id="dynamicListProd">
+
+                <!--<li>
+                    <a href="#">
+                        <img src="../_assets/img/album-bb.jpg">
+                        <h2>Broken Bells</h2>
+                        <p>Broken Bells</p>
+                    </a>
+                </li>-->
+
+            </ul>
+        </div>
+
+
+
+        <div data-role="footer" data-position="fixed">
+            <img src="images/logo.png" class="footer-logo" />
+        </div>
+    </div>
+
+
+    <!-- Product View Page -->
+    <div data-role="page" id="product-view-page">
+        <div data-role="header" data-theme="b">
+            <a data-rel="back" data-icon="back"  class="ui-btn ui-shadow ui-corner-all ui-icon-back ui-btn-icon-notext"></a>
+            <h1> Product View </h1>
+        </div>
+        <div data-role="content">
+
+            <ul data-role="listview" data-inset="true" id="dynamicListProdView"></ul>
+            <div  data-role="collapsibleset" data-theme="a" data-content-theme="a" id="prod-collapsible"> 
+               
+            </div>
+
+        </div>
+
+
+
+        <div data-role="footer" data-position="fixed">
+            <img src="images/logo.png" class="footer-logo" />
+        </div>
+    </div>
+
+
+</body>
+</html>

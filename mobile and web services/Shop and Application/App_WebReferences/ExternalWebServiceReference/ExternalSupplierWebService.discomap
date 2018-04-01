@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://proj.ruppin.ac.il/bgroup62/test2/tar5/ExternalSupplierWebService.asmx?wsdl" filename="ExternalSupplierWebService.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.DiscoveryDocumentReference" url="https://proj.ruppin.ac.il/bgroup62/test2/tar5/ExternalSupplierWebService.asmx?disco" filename="ExternalSupplierWebService.disco" />
+  </Results>
+</DiscoveryClientResultsFile>

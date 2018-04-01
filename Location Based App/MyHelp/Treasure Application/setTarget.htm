@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+	<script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKZW8kDSPbc-2w0hopNeWcxUHZetgzA4w&v=3.exp&sensor=false"></script>
+    <script src="ajaxCalls.js"></script>
+    <title>Set Target Points</title>
+
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+
+   
+   <script>
+
+       //-----------------------------------------------------------------------
+       //-----------------------------------------------------------------------
+        function initialize() {
+            var ruppinPos = new Object();
+            ruppinPos.lat  = 32.343193;
+            ruppinPos.long = 34.911908;
+            var myLatlng = new google.maps.LatLng(ruppinPos.lat, ruppinPos.long);
+            var mapOptions = {
+                zoom: 17,
+                center: myLatlng
+            }
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+            // add a marker in Ruppin
+            var marker1 = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: 'Ruppin'
+            });
+
+            // wire the click event on the map
+            google.maps.event.addListener(map, 'click', function (event) {
+                // get the coordinates
+                var lat = event.latLng.lat();
+                var lng = event.latLng.lng();
+                clickLatlng = new google.maps.LatLng(lat, lng);
+
+               
+                groupName = document.getElementById("groupNameTB").value;
+                request = {
+                    lat: lat,
+                    lng: lng,
+                    groupName: groupName
+                };
+                // ajax call that writes the target points into the server
+                setTarget(request, setTarget_Success, setTarget_Failure);
+            });
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+        //-----------------------------------------------------------------------
+        // setTarget success
+        // note that there is one target point per group and reentering a target
+        // point for the same groupName will override the previous one
+        //-----------------------------------------------------------------------
+        function setTarget_Success(data) {
+            // create a marker
+            var marker = new google.maps.Marker({
+                position: clickLatlng,
+                map: map,
+                title: 'Target'
+            });
+        }
+        //-----------------------------------------------------------------------
+        // setTarget failure
+        //-----------------------------------------------------------------------
+        function setTarget_Failure(e) {
+            alert("failed in setTarget :( " + e.responseText);
+        }
+        
+    </script>
+  </head>
+  <body>
+      <div style = "height:50px;">
+         groupName : <input type = "text" id = "groupNameTB" />
+      </div>
+
+    <div id="map-canvas"></div>
+  </body>
+</html>

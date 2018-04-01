@@ -1,0 +1,89 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geolocation</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+        html, body, #map-canvas {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+    <!--
+    Include the maps javascript with sensor=true because this code is using a
+    sensor (a GPS locator) to determine the user's location.
+    See: https://developers.google.com/maps/documentation/javascript/tutorial#Loading_the_Maps_API
+    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6k4P_BoZOg2zM4K05E54ilLLWwZo-9cU&v=3.exp&sensor=true"></script>
+
+    <script>
+        // Note: This example requires that you consent to location sharing when
+        // prompted by your browser. If you see a blank space instead of the map, this
+        // is probably because you have denied permission for location sharing.
+
+        function initialize() {
+            var mapOptions = {
+                zoom: 13
+            };
+
+            map = new google.maps.Map(document.getElementById('map-canvas'),
+                mapOptions);
+
+            // Try HTML5 geolocation
+            if (navigator.geolocation) {
+                // call getCurrentPosition with successCB and errorCB
+                navigator.geolocation.getCurrentPosition(
+                    success, handleNoGeolocation);
+            }
+            else {
+                    // Browser doesn't support Geolocation
+                handleNoSupport();
+            }
+        }
+
+        // run in case of success :)
+        function success(position) {
+            centerMap(position, "success");
+        }
+
+        // run in case of failure :)
+        function handleNoGeolocation(err) {
+            centerMap(null, err.message);
+        }
+
+        function handleNoSupport() {
+            centerMap(null, "No support for getCurrentLocation");
+        }
+
+        // Set the center of the map according to the 
+        function centerMap(position,message) {
+            if (message == "success")
+                pos = new google.maps.LatLng(position.coords.latitude,
+                                       position.coords.longitude);
+            else {
+                // set the position to an arbitrary point
+                pos = new google.maps.LatLng(60,105); 
+            }
+
+            map.setCenter(pos); // center the map
+
+            // add an info window
+            var infowindow = new google.maps.InfoWindow({
+                map: map,
+                position: pos,
+                content: message
+            });
+
+         }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+</head>
+<body>
+    <div id="map-canvas"></div>
+</body>
+</html>

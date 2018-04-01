@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+	<script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKZW8kDSPbc-2w0hopNeWcxUHZetgzA4w&v=3.exp&sensor=false"></script>
+    <script src="ajaxCalls.js"></script>
+
+    <title>Get Challenge</title>
+
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+      .infoImg{
+            width:90px;
+            max-height:100px;
+        }
+    </style>
+
+   
+   <script>
+       //-----------------------------------------------------------------------
+       //-----------------------------------------------------------------------
+       function initialize() {
+            infowindow = null;
+            var ruppinPos = new Object();
+            ruppinPos.lat  = 32.343193;
+            ruppinPos.long = 34.911908;
+            var myLatlng = new google.maps.LatLng(ruppinPos.lat, ruppinPos.long);
+            var mapOptions = {
+                zoom: 17,
+                center: myLatlng
+            }
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+            // add a marker in Ruppin
+            var marker1 = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: 'Ruppin'
+            });
+
+            // wire the click event on the map
+            google.maps.event.addListener(map, 'click', function (event) {
+                // get the coordinates
+                var lat = event.latLng.lat();
+                var lng = event.latLng.lng();
+                clickLatlng = new google.maps.LatLng(lat, lng);
+
+                var request = { //the coords needs to be your current location
+                    lat: lat,
+                    lng: lng,
+                    groupName: document.getElementById("groupNameTB").value
+                }
+                getChallenge(request, getChallenge_success, getChallenge_failure);
+            });
+
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+        function getChallenge_success(result) {
+            if (infowindow) {
+                infowindow.close();
+            }
+            var data = $.parseJSON(result.d)
+            var lat = data.Latitude;
+            var lng = data.Longtitude;
+            var desc = data.Description;
+            var imgPath = data.ImagePath;
+            var timeInMiliSec = data.TimeInSec + "000";
+            // create a marker
+            var pos = new google.maps.LatLng(lat, lng);
+            chal_marker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                title: 'Challenge Point',
+                icon: "images/blue-dot.png"
+            });
+            var contentString = '<div><h4>' + desc + '</h4><div><img class="infoImg" src = "' + imgPath + '"/></div></div>';
+            infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            infowindow.open(map, chal_marker);          
+        }
+
+        function getChallenge_failure(e) {
+            alert("failed in get challenge :( " + e.responseText);
+        }
+       
+    </script>
+  </head>
+  <body>
+      <table>
+          <tr>
+              <td>
+                  groupName :
+              </td>
+              <td>
+                  <input type="text" id="groupNameTB" />
+              </td>
+          </tr>
+          <!--<tr>
+              <td>
+                  POI Name :
+              </td>
+              <td>
+                  <input type="text" id="nameTB" />
+              </td>
+          </tr>
+          <tr>
+              <td>
+                  Description :
+              </td>
+              <td>
+                  <input type="text" id="descriptionTB" />
+              </td>
+          </tr>
+          <tr>
+              <td>
+                  imageUrl :
+              </td>
+              <td>
+                  <input type="text" id="imageUrlTB" />
+              </td>
+          </tr>-->
+      </table>
+      <div id="map-canvas"></div>
+  </body>
+</html>

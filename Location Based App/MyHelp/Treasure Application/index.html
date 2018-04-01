@@ -1,0 +1,267 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKZW8kDSPbc-2w0hopNeWcxUHZetgzA4w&v=3.exp&sensor=false"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+    <script src="ajaxCalls.js"></script>
+
+    <title>Treasure Game</title>
+
+    <style type="text/css">
+        /*This Css code I found in order to make the maps work with jQueryMobile*/
+        #content {
+            padding: 0 !important;
+            position: absolute !important;
+            top: 40px !important;
+            right: 0 !important;
+            bottom: 40px !important;
+            left: 0 !important;
+        }
+
+        #gpsIcon {
+            height: 2em;
+        }
+
+        html, body, #map-canvas {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+        }
+
+    </style>
+
+    <script type="text/javascript">
+        //---------------------------------------------------------------
+        // this is called on the pagecreate event of the startDialog page
+        //---------------------------------------------------------------
+        $(document).on('pagecreate', '#startDialog', function (e, data) {
+            //---------------------------------------------
+            // calling a function on the startBTN link
+            //---------------------------------------------
+            $("#startBTN").click(function (event) { // calling a function on the startBTN link
+                groupName = $("#groupNameTB").val(); // get the value from the textbox
+                if (groupName == null || groupName == "") { // check that the user entered a value
+                    alert("please enter a group name");
+                    event.preventDefault(); // prevent the link from moving to the next page
+                }
+                else {
+                    navFlag = "on"; // 
+                }
+            });
+        });
+        //--------------------------------------------------------------
+        // this is called on the pageshow event of the startDialog page
+        //--------------------------------------------------------------
+        $(document).on('pageshow', '#startDialog', function (e, data) {
+            if (!navigator.geolocation) {// Browser doesn't support Geolocation
+                alert("your browser doesn't support geoLocation");
+            }
+
+            if (typeof (h) !== 'undefined') { // in case we went back to the first page
+                if (h != null) clearInterval(h);
+            }
+        });
+
+        //-----------------------------------------------------------
+        // this is called on the pagecreate event of the map-page page
+        //-----------------------------------------------------------
+        $(document).on('pagecreate', '#map-page', function (e, data) {
+            // handle the stop click
+            $("#stopBTN").click(function () {
+                clearInterval(h); // stop running getMyPosition
+                navFlag = "off";  // set the navigaion flag to off
+                changePage("startDialog");// redirect the user to the landing page
+            });
+        });
+
+        //-----------------------------------------------------------
+        // this is called on the pageshow event of the map-page page
+        //-----------------------------------------------------------
+        $(document).on('pageshow', '#map-page', function (e, data) {
+            image = "images/man_small.png";
+            timer = 0;
+            timeInterval = 5000; // [in miliseconds]between the calls to the new position calculations            //minDistance = 5; 
+            minDistance = 10; // distance from the treasure in which it is found
+
+            var mapOptions = { // set the map options
+                zoom: 18
+            }
+            mapObj = document.getElementById('map-canvas'); // get the map-canvas div
+            map = new google.maps.Map(mapObj, mapOptions); // create the map object
+
+            if (navFlag == "on") {
+                getMyPosition(); // activate it for the first time
+                h = setInterval("getMyPosition()", timeInterval); // run the getPosition every timeInterval 
+            }
+            else {
+                changePage("startDialog"); // handle the case that we got here via back
+            }
+        });
+
+        //-----------------------------------------------------------------------
+        // get the user's position
+        //-----------------------------------------------------------------------
+        function getMyPosition() {
+
+            var options = {
+                enableHighAccuracy: true,
+                timeout: timeInterval,
+                maximumAge: 1000
+            };
+            navigator.geolocation.getCurrentPosition(getCurrentPosition_Success,
+                                                     getCurrentPosition_Failure,
+                                                     options);
+            timer += timeInterval / 1000; // increment the timer
+        }
+
+        //------------------------------------------------------------
+        // Callback function in case of success in getCurrentPosition
+        //------------------------------------------------------------
+        function getCurrentPosition_Success(position) {
+            if (navFlag == "off") return;
+            co = position.coords; // set a short variable for conviniece
+            var pos = new google.maps.LatLng(co.latitude, co.longitude);
+            $('#gpsIcon').attr('src', 'images/gps.png'); // show the gps working icon
+            var marker1 = new google.maps.Marker({ // set a marker on the map
+                position: pos,
+                map: map,
+                title: 'You Are Here',
+                icon: image
+            });
+            map.setCenter(pos); // center the map around the position of the user
+
+            var request = {
+                lat: co.latitude,
+                lng: co.longitude,
+                groupName: groupName
+            };
+            // Ajax function : calculate the distance of the user's from the target
+            // pass the callback functions as parameters to the ajax
+            getDistance(request, getDistance_Success, getDistance_Failure);
+        }
+
+        //------------------------------------------------------------
+        // Callback function in case of failure in getCurrentPosition
+        //------------------------------------------------------------
+        function getCurrentPosition_Failure() {
+            $('#gpsIcon').attr('src', 'images/no-gps.png');
+        }
+
+        //------------------------------------------------------------
+        // Callback function in case of success in getDistance
+        //------------------------------------------------------------
+        function getDistance_Success(data) // Variable data contains the data we get from serverside
+        {
+            var distance = $.parseJSON(data.d) * 1000; //X 1000 is because the value received is in KM
+            distance = Math.floor(distance);           // round the distance
+            // display it to the user
+            document.getElementById("distance").innerHTML = distance + "m ; a:" + co.accuracy + " ; " + timer + "s";
+
+            if (reachedTarget(distance)) {// check if target is reached
+                clearInterval(h);
+                changePage("riddle");
+                navFlag = "off";
+            }
+        }
+
+        //------------------------------------------------------------
+        // Callback function in case of success in getDistance
+        //------------------------------------------------------------
+        function getDistance_Failure(e) {
+            //alert("failed in getDistance :( " + e.responseText);
+            alert("failed in getDistance :( " + e.error);
+        } 
+
+        //------------------------------------------------------------
+        // Check if we reached the destination
+        //------------------------------------------------------------
+        function reachedTarget(distance) {
+            if (distance < minDistance) return true;
+            else return false;
+        }
+
+        //--------------------------------------------------------------
+        // Change to another page
+        //--------------------------------------------------------------
+        function changePage(pName) {
+            $.mobile.changePage($("#" + pName + ""), {
+                allowSamePageTransition: true,
+                transition: 'flip',
+                changeHash: true,
+                reverse: true,
+                showLoadMsg: true,
+                reloadPage: true,
+            });
+        }
+
+    </script>
+
+
+
+</head>
+<body>
+
+
+    <div data-role="page" id="startDialog">
+
+        <div data-role="header" data-theme="b" data-position="fixed">
+            <h1>
+                Are you ready to go?
+            </h1>
+        </div>
+
+        <div data-role="content" id="content2">
+                <input type="text" id="groupNameTB" placeholder="Enter your group name here"/>
+            <a href="#map-page" data-role="button" id="startBTN">
+                <h2>Press To Start</h2>
+                <img src="images/t-hunt.png" style="width:100%" />
+            </a>
+        </div>
+
+    </div>
+
+    <div data-role="page" id="map-page">
+        <div data-role="header" data-position="fixed" data-theme="e">
+            <img src="images/no-gps.png" class="ui-btn-left" id="gpsIcon" />
+            <h1>
+                Treasure Game - Ruppin
+            </h1>
+            <h1 id="distance" data-theme="b">
+                Distance:
+            </h1>
+        </div>
+
+        <div data-role="content" id="content">
+            <div id="map-canvas">
+            </div>
+        </div>
+
+        <div data-role="footer" data-position="fixed" data-theme="e" style="text-align:center">
+            <a id="stopBTN" href="#startDialog" data-role="button">stop navigation</a>
+        </div>
+
+        </div>
+
+    <div data-role="page" id="riddle">
+        <div data-role="header" data-theme="b" data-position="fixed">
+            <h1>
+                Mazal Tov
+            </h1>
+        </div>
+
+        <div data-role="content" id="content3" style="text-align:center">
+            <h1 style="direction:rtl">עם מי מתחתן איתישיוק?</h1>
+            <a href="http://www.youtube.com/embed/6mM6JgLY6RM" data-role="button">
+                <h2>press to listen</h2>
+                <img src="images/george.jpg" style="width:100%" id="startBTN" />
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

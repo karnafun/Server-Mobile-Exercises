@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+	<script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKZW8kDSPbc-2w0hopNeWcxUHZetgzA4w&v=3.exp&sensor=false"></script>
+    <script src="ajaxCalls.js"></script>
+
+    <title>Show the path</title>
+
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+
+   
+   <script>
+
+       function initialize() {
+
+            // center the map in Ruppin
+            var ruppinPos = new Object();
+            ruppinPos.lat  = 32.343193;
+            ruppinPos.long = 34.911908;
+            var myLatlng = new google.maps.LatLng(ruppinPos.lat, ruppinPos.long);
+            var mapOptions = {
+                zoom: 17,
+                center: myLatlng,
+                mapTypeId: google.maps.MapTypeId.SATELLITE
+            }
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+            var marker1 = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: 'Ruppin'
+            });
+       }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+       //--------------------------------------------------------------------
+       // get the path
+       //--------------------------------------------------------------------
+        function getPath() {
+            groupName = document.getElementById("groupNameTB").value;
+            if (groupName == "") {
+                alert("Please enter a group name");
+                return;
+            }
+            request = {
+                groupName: groupName
+            }
+            // an ajax call that gets the list of the path points
+            getPathList(request, getPathList_Success, getPathList_Failure);
+        }
+
+       //-----------------------------------------------------------------------
+       // called on getPathList success
+       //-----------------------------------------------------------------------
+        function getPathList_Success(data) {
+            var pathList = $.parseJSON(data.d);
+            // center the map on the first point of the path
+            var myLatlng = new google.maps.LatLng(pathList[0].Lat, pathList[0].Lng);
+            map.setCenter(myLatlng);
+            drawPath(pathList);
+        }
+
+        //-----------------------------------------------------------------------
+        // called on getPathList failure
+        //-----------------------------------------------------------------------
+        function getPathList_Failure(data) {
+            alert("failed in getPathList :( " + e.responseText);
+        }
+       
+        //--------------------------------------------------------------------------------
+        // draw the path from the path list
+        //--------------------------------------------------------------------------------
+        function drawPath(pathList) {
+
+            polyLineArr = new Array(); // create a new array
+            // load all the path points to the array
+            for (i = 0; i < pathList.length; i++) {
+                polyLineArr[i] = new google.maps.LatLng(pathList[i].Lat, pathList[i].Lng);
+            }
+            // create a new Polyline object
+            var walkPath = new google.maps.Polyline({
+                path: polyLineArr, // the name of the array
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+
+            walkPath.setMap(map); // show the walk path on the map
+            getTarget(request,getTarget_Success,getTarget_Failure); // show the target
+        }
+
+        //-----------------------------------------------------------------------
+        // called on getTarget success
+        //-----------------------------------------------------------------------
+        function getTarget_Success(data) {
+            targetPoint = $.parseJSON(data.d);
+            if (targetPoint != "")
+                showTarget(targetPoint);
+            else {
+                alert("no target point");
+            }
+        }
+
+        //-----------------------------------------------------------------------
+        // called on getTarget failure
+        //-----------------------------------------------------------------------
+        function getTarget_Failure(data) {
+            alert("failed in getTarget :( " + e.responseText);
+        }
+
+        //-----------------------------------------------------------------------
+        // Show the target point
+        //-----------------------------------------------------------------------
+        function showTarget(targetPoint) {
+            var targetLatlng = new google.maps.LatLng(targetPoint.Lat, targetPoint.Lng);
+            image = "images/blue-dot.png";
+            var marker = new google.maps.Marker({
+                position: targetLatlng,
+                map: map,
+                title: 'Target ' + groupName + " 9/11 ",
+                icon: image
+            });
+        }
+
+    </script>
+  </head>
+  <body>
+    <div style = "height:50px; background-color:Green">
+    groupName : <input type = "text" id = "groupNameTB" /> &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type = "button" onclick = "getPath()" value = "Show Path List" />
+    </div>
+    <div id="map-canvas"></div>
+  </body>
+</html>

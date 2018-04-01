@@ -1,0 +1,128 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Directions service - Class Ex</title>
+
+   
+    
+
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        html, body, #map-canvas {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .infoImage{ height:100px}
+
+        #panel {
+            position: absolute;
+            top: 5px;
+            left: 70%;
+            width:30%;
+            z-index: 5;
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #999;
+        }                #motoTB, #imgTB {width:100%}        table { width:100%}
+    </style>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6k4P_BoZOg2zM4K05E54ilLLWwZo-9cU&v=3.exp&sensor=false"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>
+
+    <script>
+
+        directionsService = new google.maps.DirectionsService();
+        image = 'images/home.png';
+
+
+        function initialize() {
+
+
+        // add a jquery code that allows the panel to be dragged
+        $("#panel").draggable();
+
+        // create a new google.maps.LatLng with your home coordinate
+        
+
+        // set the mapOptions (zoom and center)
+        
+
+        // create a map object with the div and mapOptions
+        
+        // create a new marker with map, position, title, icon - the title should be "my house"
+        
+        } // end of initialize
+
+
+        // Add an info window to the marker
+        function addInfo() {
+            // get the values from the textbox controls
+            
+            // build the content string from the textbox values
+            // <div> <p>moto</p> <img .../> </div>
+            
+
+            // create a new InfoWindow object and set the content to be the content string you created
+            
+            // add a callback listener to the marker that will open the infowindow when  click
+            
+        }
+
+            
+
+        // calculate the route to the place entered in the textbox
+        function calcRoute() {
+
+            // create a new DirectionRenderer  object
+                       
+            // set the map to be the one we're working on
+                        
+            // get the destination point from the textbox
+            
+            // define the route request parameter (origin, destination, travelMode)
+            
+            // call the route function
+                // check the function status
+                    // display the route
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+</head>
+<body>
+
+    <div id="map-canvas">
+    </div>
+    <div id="panel">
+        <table>
+            <tr>
+                <td>moto: </td>
+                <td><input type="text" id="motoTB" /> </td>
+            </tr>
+
+            <tr>
+                <td>image: </td>
+                <td><input type="text" id="imgTB" /> </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="button" id="addBTN" value="Add Info" onclick="addInfo()" />
+                </td>
+            </tr>
+        </table>    
+
+        <br />
+            To:
+        <input type="text" id="destination" /> &nbsp; &nbsp;&nbsp;
+            <input type="button" id="distanceBTN" value="show path" onclick="calcRoute()" />
+        
+    </div>
+</body>
+</html>
