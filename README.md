@@ -1,4 +1,4 @@
-Repository contains exercises from two courses that were tought together.  
+Repository contains exercises from two courses that were taught together.  
  - Development of distributed systems on server side  
  - Mobile Application Development  
 both taught by Benny Bernfeld in Ruppin Academic Center.  
